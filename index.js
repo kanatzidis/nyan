@@ -11,10 +11,11 @@ frames.forEach(function(e, i) {
 
 var i = 0;
 setInterval(function() {
-  process.stdout.write('\r\033[2J');
+  process.stdout.write('\033[0f');
+  //process.stdout.write('\033[2J');
   process.stdout.write(frames[i]);
   i = (i+1)%frames.length;
-}, 75);
+}, 29);
 
 var speaker = new Speaker({
   channels: 2,
