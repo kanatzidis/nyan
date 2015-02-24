@@ -1,0 +1,24 @@
+var fs = require('fs');
+var lame = require('lame');
+var Speaker = require('speaker');
+
+var frames = require('./frames');
+
+frames.forEach(function(e, i) {
+  frames[i] = e.slice(17, 50).join('\n');
+});
+
+var i = 0;
+setInterval(function() {
+  process.stdout.write('\r\033[2J');
+  process.stdout.write(frames[i]);
+  i = (i+1)%frames.length;
+}, 75);
+
+var speaker = new Speaker({
+  channels: 2,
+  bitDepth: 16,
+  sampleRate: 44100
+});
+
+fs.createReadStream('NyanCatoriginal.mp3').pipe(new lame.Decoder).pipe(speaker);

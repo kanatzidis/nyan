@@ -1,0 +1,28 @@
+{
+  "name": "nyan",
+  "version": "0.0.0",
+  "description": "Like getting rickrolled, but with Nyancat",
+  "main": "index.js",
+  "dependencies": {
+    "lame": "^1.1.2",
+    "speaker": "^0.2.4",
+    "play-sound": "^0.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kanatzidis/nyan.git"
+  },
+  "keywords": [
+    "nyan"
+  ],
+  "author": "Gregori Kanatzidis",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kanatzidis/nyan/issues"
+  },
+  "homepage": "https://github.com/kanatzidis/nyan"
+}
