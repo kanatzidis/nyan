@@ -1,6 +1,7 @@
 var fs = require('fs');
 var lame = require('lame');
 var Speaker = require('speaker');
+var path = require('path');
 
 var frames = require('./frames');
 
@@ -21,4 +22,4 @@ var speaker = new Speaker({
   sampleRate: 44100
 });
 
-fs.createReadStream('NyanCatoriginal.mp3').pipe(new lame.Decoder).pipe(speaker);
+fs.createReadStream(path.resolve(__dirname, './NyanCatoriginal.mp3')).pipe(new lame.Decoder).pipe(speaker);
