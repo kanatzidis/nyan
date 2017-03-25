@@ -6,6 +6,22 @@ Like getting rickrolled, but with Nyancat
 
 Just `require('nyan')`, then wonder about yourself.
 
+You can optionally call the module with an `options` object as an argument, taking the form:
+
+```
+{
+  colors: true, // use colors instead of just raw ascii
+  pure: true // use solid colors only
+}
+```
+
+Try running the example in `test/example.js`:
+
+```
+node test/example.js --colors
+node test/example.js --colors --pure
+```
+
 #### Credits
 
 Nyan Cat ASCII frames lifted from [https://github.com/vtsvang/nyancat-telnet-node](https://github.com/vtsvang/nyancat-telnet-node)
