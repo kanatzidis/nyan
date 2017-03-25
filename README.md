@@ -9,10 +9,12 @@ Just `require('nyan')`, then wonder about yourself.
 You can optionally call the module with an `options` object as an argument, taking the form:
 
 ```
-{
+var opts = {
   colors: true, // use colors instead of just raw ascii
   pure: true // use solid colors only
-}
+};
+
+require('nyan')(opts);
 ```
 
 Try running the example in `test/example.js`:
