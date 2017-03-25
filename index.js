@@ -4,9 +4,26 @@ var Speaker = require('speaker');
 var path = require('path');
 
 var frames = require('./frames');
+var characters = require('./characters');
+
+var colors = process.argv.includes('--colors');
+var pure = process.argv.includes('--pure');
 
 frames.forEach(function(e, i) {
-  frames[i] = e.slice(17, 50).join('\n');
+  frames[i] = e.slice(17, 50);
+  if(colors) {
+    frames[i] = frames[i].map(function(row) {
+      return row.split('').map(function(c) {
+        // I don't think any characters are unaccounted for but you never know
+        if(characters.draw[c]) {
+          return characters.draw[c] + (pure ? ' ' : c) + characters.end;
+        } else {
+          return c;
+        }
+      }).join('');
+    });
+  }
+  frames[i] = frames[i].join('\n');
 });
 
 var i = 0;
