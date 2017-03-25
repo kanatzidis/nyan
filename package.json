@@ -1,6 +1,6 @@
 {
   "name": "nyan",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Like getting rickrolled, but with Nyancat",
   "main": "index.js",
   "dependencies": {
