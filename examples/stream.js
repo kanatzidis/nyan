@@ -1,3 +1,5 @@
 var nyan = require('../')();
 
-nyan.pipe(process.stdout);
+setTimeout(function() {
+  nyan.pipe(process.stdout);
+}, 200);
