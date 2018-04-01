@@ -10,7 +10,12 @@ var invoked = false;
 
 function nyan(options) {
   invoked = true;
-  var { colors, pure } = options;
+  if(!options) return nyan;
+  var {
+    colors,
+    pure,
+    sound = true,
+    stream = process.stdout } = options;
 
   frames.forEach(function(e, i) {
     frames[i] = e.slice(17, 50);
@@ -29,22 +34,28 @@ function nyan(options) {
     frames[i] = frames[i].join('\n');
   });
   
+  if(sound) {
+    var speaker = new Speaker({
+      channels: 2,
+      bitDepth: 16,
+      sampleRate: 44100
+    });
+    
+    fs.createReadStream(path.resolve(__dirname, './NyanCatoriginal.mp3')).pipe(new lame.Decoder).pipe(speaker);
+  }
+
   var i = 0;
-  setInterval(function() {
-    process.stdout.write('\033[0f');
+  return setInterval(function() {
+    stream.write('\033[0f');
     //process.stdout.write('\033[2J');
-    process.stdout.write(frames[i]);
+    stream.write(frames[i]);
     i = (i+1)%frames.length;
   }, 29);
-  
-  var speaker = new Speaker({
-    channels: 2,
-    bitDepth: 16,
-    sampleRate: 44100
-  });
-  
-  fs.createReadStream(path.resolve(__dirname, './NyanCatoriginal.mp3')).pipe(new lame.Decoder).pipe(speaker);
 }
+
+nyan.pipe = function(stream) {
+  return nyan({ colors: true, pure: true, stream, sound: false });
+};
 
 module.exports = nyan;
 

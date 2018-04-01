@@ -17,11 +17,31 @@ var opts = {
 require('nyan')(opts);
 ```
 
-Try running the example in `test/example.js`:
+Call the module with no arguments to prevent it from auto-running:
 
 ```
-node test/example.js --colors
-node test/example.js --colors --pure
+var nyan = require('nyan')(); // returns itself
+
+// some time later
+nyan({}); // call with options as above
+```
+
+You can also "pipe" it to a stream (pipe is pretend, nyan isn't a real stream). The frames will be written to the given stream:
+
+```
+var nyan = require('nyan')();
+
+// it returns an interval rather than the stream you pass it
+var interval = nyan.pipe(process.stdout);
+clearInterval(interval);
+```
+
+Try running the examples in `./examples`:
+
+```
+node examples/basic.js --colors
+node examples/basic.js --colors --pure
+node examples/stream.js
 ```
 
 #### Credits
