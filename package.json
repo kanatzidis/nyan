@@ -13,7 +13,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/kanatzidis/nyan.git"
+    "url": "git+https://github.com/kanatzidis/nyan.git"
   },
   "keywords": [
     "nyan"
