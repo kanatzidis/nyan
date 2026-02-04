@@ -1,0 +1,67 @@
+name: Node.js Compatibility Check
+
+on:
+  schedule:
+    # Run daily at 9 AM UTC
+    - cron: '0 9 * * *'
+  workflow_dispatch:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test-native-deps:
+    name: Test on Node ${{ matrix.node-version }} (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        node-version: ['current']
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Display Node.js version
+        run: node --version
+
+      - name: Install virtual audio driver (Windows)
+        if: runner.os == 'Windows'
+        shell: powershell
+        run: |
+          Start-Service audio*
+          Invoke-WebRequest https://github.com/duncanthrax/scream/releases/download/3.6/Scream3.6.zip -OutFile C:\Scream3.6.zip
+          Expand-Archive -Path C:\Scream3.6.zip -DestinationPath C:\Scream
+          $cert = (Get-AuthenticodeSignature C:\Scream\Install\driver\Scream.sys).SignerCertificate
+          $store = [System.Security.Cryptography.X509Certificates.X509Store]::new("TrustedPublisher", "LocalMachine")
+          $store.Open("ReadWrite")
+          $store.Add($cert)
+          $store.Close()
+          cd C:\Scream\Install\driver
+          C:\Scream\Install\helpers\devcon install Scream.inf *Scream
+
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libasound2-dev pulseaudio pulseaudio-utils alsa-utils
+
+      - name: Setup virtual audio (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          pulseaudio -D --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=ci_null sink_properties=device.description=CI-NullSink
+          pactl set-default-sink ci_null
+          cat > ~/.asoundrc <<'EOF'
+          pcm.!default { type pulse }
+          ctl.!default { type pulse }
+          EOF
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Verify module runs
+        run: node -e "require('./index.js'); setTimeout(() => process.exit(0), 10000)"

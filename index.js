@@ -1,5 +1,4 @@
-var fs = require('fs');
-var lame = require('lame');
+var Lame = require('node-lame').Lame;
 var Speaker = require('speaker');
 var path = require('path');
 var nyanjs = require('nyan-js');
@@ -19,8 +18,16 @@ function nyan(options) {
     bitDepth: 16,
     sampleRate: 44100
   });
+
+  const decoder = new Lame({
+      output: 'buffer'
+  }).setFile(path.resolve(__dirname, './NyanCatoriginal.mp3'));
   
-  fs.createReadStream(path.resolve(__dirname, './NyanCatoriginal.mp3')).pipe(new lame.Decoder).pipe(speaker);
+  decoder.decode().then(() => {
+    const buffer = decoder.getBuffer();
+
+    speaker.end(buffer);
+  });
 }
 
 nyan.pipe = function(stream) {
