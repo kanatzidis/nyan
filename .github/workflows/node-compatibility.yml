@@ -32,19 +32,26 @@ jobs:
 
       - name: Install system dependencies (Linux)
         if: runner.os == 'Linux'
-        run: sudo apt-get update && sudo apt-get install -y libasound2-dev
+        run: sudo apt-get update && sudo apt-get install -y libasound2-dev pulseaudio pulseaudio-utils alsa-utils
+
+      - name: Setup virtual audio (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          pulseaudio -D --exit-idle-time=-1
+          pactl load-module module-null-sink sink_name=ci_null sink_properties=device.description=CI-NullSink
+          pactl set-default-sink ci_null
+          cat > ~/.asoundrc <<'EOF'
+          pcm.!default { type pulse }
+          ctl.!default { type pulse }
+          EOF
 
       - name: Install dependencies
         run: npm install
 
-      - name: Verify module runs (macOS)
-        if: runner.os == 'macOS'
+      - name: Verify module runs (macOS/Linux)
+        if: runner.os != 'Windows'
         run: node -e "require('./index.js'); setTimeout(() => process.exit(0), 10000)"
 
       - name: Verify native modules compile (Windows)
         if: runner.os == 'Windows'
         run: node -e "require('speaker'); require('node-lame'); console.log('Native modules loaded successfully')"
-
-      - name: Verify native modules compile (Linux)
-        if: runner.os == 'Linux'
-        run: echo "Native modules compiled successfully (npm install succeeded)"
