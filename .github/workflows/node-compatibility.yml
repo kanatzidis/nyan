@@ -30,8 +30,12 @@ jobs:
       - name: Display Node.js version
         run: node --version
 
+      - name: Install system dependencies (Linux)
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y libasound2-dev
+
       - name: Install dependencies
         run: npm install
 
-      - name: Verify module loads
-        run: node -e "require('./index.js')"
+      - name: Verify module runs
+        run: node -e "require('./index.js'); setTimeout(() => process.exit(0), 10000)"
