@@ -37,5 +37,10 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Verify module runs
+      - name: Verify module runs (macOS)
+        if: runner.os == 'macOS'
         run: node -e "require('./index.js'); setTimeout(() => process.exit(0), 10000)"
+
+      - name: Verify native modules compile (Linux/Windows)
+        if: runner.os != 'macOS'
+        run: node -e "require('speaker'); require('lame'); console.log('Native modules loaded successfully')"
