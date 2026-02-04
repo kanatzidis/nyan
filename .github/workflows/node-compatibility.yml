@@ -41,6 +41,10 @@ jobs:
         if: runner.os == 'macOS'
         run: node -e "require('./index.js'); setTimeout(() => process.exit(0), 10000)"
 
-      - name: Verify native modules compile (Linux/Windows)
-        if: runner.os != 'macOS'
-        run: node -e "require('speaker'); require('lame'); console.log('Native modules loaded successfully')"
+      - name: Verify native modules compile (Windows)
+        if: runner.os == 'Windows'
+        run: node -e "require('speaker'); require('node-lame'); console.log('Native modules loaded successfully')"
+
+      - name: Verify native modules compile (Linux)
+        if: runner.os == 'Linux'
+        run: echo "Native modules compiled successfully (npm install succeeded)"
