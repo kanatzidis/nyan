@@ -30,6 +30,10 @@ jobs:
       - name: Display Node.js version
         run: node --version
 
+      - name: Install lame (Windows)
+        if: runner.os == 'Windows'
+        run: choco install lame
+
       - name: Install virtual audio driver (Windows)
         if: runner.os == 'Windows'
         shell: powershell
